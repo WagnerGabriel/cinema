@@ -1,0 +1,131 @@
+**Classe EntradaDeCinema**
+
+package exercicio2;
+
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
+
+
+/**
+ *
+ * @author joel.osantos
+ */
+
+public class EntradaDeCinema {
+
+    private Date data;
+
+    private Date horario;
+
+    private int sala;
+
+    private float valor;
+
+
+    public EntradaDeCinema(Date data, Date horario, int sala, float valor){
+        this.data = data;
+        this.horario = horario;
+        this.sala = sala;
+        this.valor = valor;
+    }
+
+    public void calcularDescontoIdade(int anoNascimento){
+        SimpleDateFormat formatAno = new SimpleDateFormat("yyyy");
+        int anoAtual = Integer.parseInt(formatAno.format(getData()));
+        int idade = anoAtual - anoNascimento;
+        if(idade < 12){
+            float desconto = getValor() / 2;
+            setValor(desconto);
+        }
+    }
+
+    public void calcularDescontoHorario(){
+        SimpleDateFormat formatHora = new SimpleDateFormat("HH");
+        int horario = Integer.parseInt(formatHora.format(getHorario()));
+        if(horario < 16){
+            float desconto = (10*getValor())/100;
+            setValor(getValor() - desconto);
+        }
+    }
+
+    public void imprimir(){
+        SimpleDateFormat formatData = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatHora = new SimpleDateFormat("HH");
+        System.out.println("Dados do ingresso:");
+        System.out.println("Data: " + formatData.format(getData()));
+        System.out.println("Hora: " + formatHora.format(getHorario()));
+        System.out.println("Sala: " + getSala());
+        System.out.println("Valor R$: " + getValor());
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public Date getHorario() {
+        return horario;
+    }
+
+    public void setHorario(Date horario) {
+        this.horario = horario;
+    }
+
+    public int getSala() {
+        return sala;
+    }
+
+    public void setSala(int sala) {
+        this.sala = sala;
+    }
+
+    public float getValor() {
+        return valor;
+    }
+
+    public void setValor(float valor) {
+        this.valor = valor;
+    }
+}
+
+**Classe Principal**
+
+package exercicio2;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
+/**
+ *
+ * @author joel.osantos
+ */
+public class Principal {
+    public static void main(String[] args) throws ParseException {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Comprar ingresso:");
+
+        System.out.println("Data: (dd/MM/yyyy)");
+        String data = input.nextLine();
+        SimpleDateFormat formatData = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataIngresso = formatData.parse(data);
+        System.out.println("Hora: (HH)");
+        String hora = input.nextLine();
+        SimpleDateFormat formatHora = new SimpleDateFormat("HH");
+        Date horaIngresso = formatHora.parse(hora);
+        System.out.println("Sala:");
+        int sala = input.nextInt();
+        System.out.println("Valor:");
+        float valor = input.nextFloat();
+        EntradaDeCinema ingresso = new EntradaDeCinema(dataIngresso, horaIngresso, sala, valor);
+        System.out.println("Ano Nascimento: ");
+        int idade = input.nextInt();
+        ingresso.calcularDescontoIdade(idade);
+        ingresso.calcularDescontoHorario();
+        ingresso.imprimir();
+    }
